@@ -15,8 +15,8 @@ type (
 type CellTypeEnum int
 
 const (
-	IMAGE CellTypeEnum = iota
-	NORMAL
+	NORMAL CellTypeEnum = iota
+	IMAGE
 )
 
 // This type represents a termbox event. The 'Mod', 'Key' and 'Ch' fields are
