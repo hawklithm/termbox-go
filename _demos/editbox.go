@@ -1,8 +1,8 @@
 package main
 
 import (
+	"github.com/hawklithm/termbox-go"
 	"github.com/mattn/go-runewidth"
-	"github.com/nsf/termbox-go"
 	"unicode/utf8"
 )
 

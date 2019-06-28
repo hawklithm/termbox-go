@@ -96,6 +96,12 @@ func write_cursor(x, y int) {
 	outbuf.WriteString("H")
 }
 
+func write_item_img(buffer []byte) {
+	outbuf.WriteString("\b\033]1337;File=;inline=1;width=4;height=1;preserveAspectRatio=0:")
+	outbuf.Write(buffer)
+	outbuf.WriteString("\a")
+}
+
 func write_sgr_fg(a Attribute) {
 	switch output_mode {
 	case Output256, Output216, OutputGrayscale:
