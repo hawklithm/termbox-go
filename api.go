@@ -3,7 +3,6 @@
 package termbox
 
 import (
-	"bytes"
 	"github.com/mattn/go-runewidth"
 )
 import "fmt"
@@ -254,7 +253,7 @@ func SetCell(x, y int, ch rune, fg, bg Attribute) {
 	back_buffer.cells[y*back_buffer.width+x] = Cell{ch, fg, bg, NORMAL, nil}
 }
 
-func SetImageCell(x, y int, bytes bytes.Buffer) {
+func SetImageCell(x, y int, bytes []byte) {
 	if x < 0 || x >= back_buffer.width {
 		return
 	}
@@ -263,7 +262,7 @@ func SetImageCell(x, y int, bytes bytes.Buffer) {
 	}
 
 	back_buffer.cells[y*back_buffer.width+x] = Cell{Type: IMAGE,
-		Bytes: bytes.Bytes()}
+		Bytes: bytes}
 }
 
 // Returns a slice into the termbox's back buffer. You can get its dimensions

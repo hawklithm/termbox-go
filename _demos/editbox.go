@@ -1,8 +1,11 @@
 package main
 
 import (
+	"bufio"
+	"encoding/base64"
 	"github.com/hawklithm/termbox-go"
 	"github.com/mattn/go-runewidth"
+	"os"
 	"unicode/utf8"
 )
 
@@ -253,6 +256,23 @@ func redraw_all() {
 	termbox.Flush()
 }
 
+func getImage(src string) string {
+	imgFile, _ := os.Open(src)
+	defer imgFile.Close()
+	fInfo, _ := imgFile.Stat()
+	var size = fInfo.Size()
+	buf := make([]byte, size)
+
+	//read file content into buffer
+	fReader := bufio.NewReader(imgFile)
+	fReader.Read(buf)
+
+	//convert the buffer bytes to base64 string - use buf.Bytes() for new image
+	imgBase64str := base64.StdEncoding.EncodeToString(buf)
+
+	return imgBase64str
+}
+
 func main() {
 	err := termbox.Init()
 	if err != nil {
@@ -260,6 +280,10 @@ func main() {
 	}
 	defer termbox.Close()
 	termbox.SetInputMode(termbox.InputEsc)
+
+	imgBase64Str := getImage("file.jpg")
+
+	termbox.SetImageCell(0, 0, []byte(imgBase64Str))
 
 	redraw_all()
 mainloop:
