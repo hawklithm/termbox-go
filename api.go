@@ -219,7 +219,7 @@ func Flush() error {
 					}
 				}
 			} else if back.Type == IMAGE {
-				send_attr(ColorWhite, ColorBlack)
+				//send_attr(ColorWhite, ColorBlack)
 				write_item_img(x, y, back.Bytes)
 			}
 			x += w
