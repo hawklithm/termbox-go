@@ -181,6 +181,11 @@ func Flush() error {
 			if w == 0 || w == 2 && runewidth.IsAmbiguousWidth(back.Ch) {
 				w = 1
 			}
+
+			if back.Type == IMAGE_PLACEHOLDER || back.Type == IMAGE {
+				w = 1
+			}
+
 			if front.Type == IMAGE_PLACEHOLDER {
 				if back.Type == IMAGE_PLACEHOLDER {
 					x += 1
