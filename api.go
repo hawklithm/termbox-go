@@ -186,6 +186,11 @@ func Flush() error {
 					x += w
 					continue
 				}
+			} else {
+				if back.Type == IMAGE_PLACEHOLDER {
+					x += w
+					continue
+				}
 			}
 			*front = *back
 			if back.Type == NORMAL {
