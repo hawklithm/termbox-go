@@ -284,6 +284,8 @@ func main() {
 	imgBase64Str := getImage("file.jpg")
 
 	termbox.SetImageCell(0, 0, []byte(imgBase64Str))
+	termbox.SetImageCell(0, 1, []byte(imgBase64Str))
+	termbox.SetImageCell(0, 3, []byte(imgBase64Str))
 
 	redraw_all()
 mainloop:

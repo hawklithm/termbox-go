@@ -1,6 +1,8 @@
 // termbox is a library for creating cross-platform text-based interfaces
 package termbox
 
+import "reflect"
+
 // public API, common OS agnostic part
 
 type (
@@ -47,8 +49,7 @@ type Cell struct {
 }
 
 func CellEqual(a, b *Cell) bool {
-	return a.Ch == b.Ch && a.Fg == b.Fg && a.Bg == b.Bg && a.Type == b.Type
-	//reflect.DeepEqual(b.Bytes, a.Bytes)
+	return a.Ch == b.Ch && a.Fg == b.Fg && a.Bg == b.Bg && a.Type == b.Type && reflect.DeepEqual(b.Bytes, a.Bytes)
 }
 
 // To know if termbox has been initialized or not
