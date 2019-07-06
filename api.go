@@ -208,7 +208,8 @@ func Flush() error {
 					}
 				}
 			} else {
-				write_item_img(back.Bytes)
+				send_attr(ColorWhite, ColorBlack)
+				write_item_img(x, y, back.Bytes)
 			}
 			x += w
 		}

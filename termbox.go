@@ -2,7 +2,9 @@
 
 package termbox
 
-import "unicode/utf8"
+import (
+	"unicode/utf8"
+)
 import "bytes"
 import "syscall"
 import "unsafe"
@@ -96,10 +98,14 @@ func write_cursor(x, y int) {
 	outbuf.WriteString("H")
 }
 
-func write_item_img(buffer []byte) {
-	outbuf.WriteString("\b\033]1337;File=;inline=1;width=4;height=1;preserveAspectRatio=0:")
+func write_item_img(x, y int, buffer []byte) {
+	if x-1 != lastx || y != lasty {
+		write_cursor(x, y)
+	}
+	outbuf.WriteString("\033]1337;File=;inline=1;width=4;height=1;preserveAspectRatio=0:")
 	outbuf.Write(buffer)
 	outbuf.WriteString("\a")
+	lastx, lasty = x+4, y
 }
 
 func write_sgr_fg(a Attribute) {
