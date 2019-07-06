@@ -34,17 +34,18 @@ func main() {
 
 	imgBase64Str := getImage("file.jpg")
 
-	termbox.SetImageCell(10, 1, []byte(imgBase64Str))
-	termbox.SetImageCell(14, 1, []byte(imgBase64Str))
-	termbox.SetImageCell(18, 1, []byte(imgBase64Str))
-	termbox.SetCell(1, 1, 'z', termbox.ColorWhite, termbox.ColorBlack)
-	termbox.SetCell(2, 1, 'z', termbox.ColorWhite, termbox.ColorBlack)
-	termbox.SetCell(3, 1, 'z', termbox.ColorWhite, termbox.ColorBlack)
-	termbox.SetCell(3, 2, 't', termbox.ColorWhite, termbox.ColorBlack)
-	termbox.SetCell(5, 1, 'z', termbox.ColorWhite, termbox.ColorBlack)
-	termbox.SetCell(0, 1, 'z', termbox.ColorWhite, termbox.ColorBlack)
-	//termbox.SetImageCell(10, 10, []byte(imgBase64Str))
-	termbox.SetCell(10, 10, 'z', termbox.ColorWhite, termbox.ColorBlack)
+	termbox.SetImageCell(1, 0, []byte(imgBase64Str))
+	termbox.SetImageCell(16, 16, []byte(imgBase64Str))
+	termbox.SetImageCell(16, 32, []byte(imgBase64Str))
+	for i := 0; i < 36; i++ {
+		ch := i
+		if ch <= 9 {
+			ch = ch + '0'
+		} else {
+			ch += 'a' - 10
+		}
+		termbox.SetCell(0, i, rune(ch), termbox.ColorWhite, termbox.ColorBlack)
+	}
 
 mainloop:
 	for {
