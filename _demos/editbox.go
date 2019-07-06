@@ -1,8 +1,8 @@
 package main
 
 import (
+	"github.com/hawklithm/termbox-go"
 	"github.com/mattn/go-runewidth"
-	"github.com/nsf/termbox-go"
 	"unicode/utf8"
 )
 
@@ -260,7 +260,6 @@ func main() {
 	}
 	defer termbox.Close()
 	termbox.SetInputMode(termbox.InputEsc)
-
 	redraw_all()
 mainloop:
 	for {

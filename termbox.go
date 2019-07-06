@@ -2,7 +2,9 @@
 
 package termbox
 
-import "unicode/utf8"
+import (
+	"unicode/utf8"
+)
 import "bytes"
 import "syscall"
 import "unsafe"
@@ -34,6 +36,11 @@ const (
 const (
 	coord_invalid = -2
 	attr_invalid  = Attribute(0xFFFF)
+)
+
+const (
+	IMAGE_HEIGHT = 4
+	IMAGE_WIDTH  = 16
 )
 
 type input_event struct {
@@ -94,6 +101,18 @@ func write_cursor(x, y int) {
 	outbuf.WriteString(";")
 	outbuf.Write(strconv.AppendUint(intbuf, uint64(x+1), 10))
 	outbuf.WriteString("H")
+}
+
+func write_item_img(x, y int, buffer []byte) {
+	if x-1 != lastx || y != lasty {
+		write_cursor(x, y)
+	}
+	outbuf.WriteString("\033]1337;File=;inline=1;width=" + strconv.Itoa(
+		IMAGE_WIDTH) + ";height=" + strconv.Itoa(IMAGE_HEIGHT) +
+		";preserveAspectRatio=0:")
+	outbuf.Write(buffer)
+	outbuf.WriteString("\a")
+	lastx, lasty = x, y
 }
 
 func write_sgr_fg(a Attribute) {

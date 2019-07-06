@@ -2,7 +2,9 @@
 
 package termbox
 
-import "github.com/mattn/go-runewidth"
+import (
+	"github.com/mattn/go-runewidth"
+)
 import "fmt"
 import "os"
 import "os/signal"
@@ -173,31 +175,51 @@ func Flush() error {
 			if back.Ch < ' ' {
 				back.Ch = ' '
 			}
-			w := runewidth.RuneWidth(back.Ch)
+			var w int
+
+			w = runewidth.RuneWidth(back.Ch)
 			if w == 0 || w == 2 && runewidth.IsAmbiguousWidth(back.Ch) {
 				w = 1
 			}
-			if *back == *front {
-				x += w
-				continue
-			}
-			*front = *back
-			send_attr(back.Fg, back.Bg)
 
-			if w == 2 && x == front_buffer.width-1 {
-				// there's not enough space for 2-cells rune,
-				// let's just put a space in there
-				send_char(x, y, ' ')
+			if back.Type == IMAGE_PLACEHOLDER || back.Type == IMAGE {
+				w = 1
+			}
+
+			if front.Type == IMAGE_PLACEHOLDER {
+				if back.Type == IMAGE_PLACEHOLDER {
+					x += 1
+					continue
+				}
 			} else {
-				send_char(x, y, back.Ch)
-				if w == 2 {
-					next := cell_offset + 1
-					front_buffer.cells[next] = Cell{
-						Ch: 0,
-						Fg: back.Fg,
-						Bg: back.Bg,
+				if back.Type != IMAGE_PLACEHOLDER {
+					if CellEqual(back, front) {
+						x += w
+						continue
 					}
 				}
+			}
+			*front = *back
+			if back.Type == NORMAL {
+				send_attr(back.Fg, back.Bg)
+
+				if w == 2 && x == front_buffer.width-1 {
+					// there's not enough space for 2-cells rune,
+					// let's just put a space in there
+					send_char(x, y, ' ')
+				} else {
+					send_char(x, y, back.Ch)
+					if w == 2 {
+						next := cell_offset + 1
+						front_buffer.cells[next] = Cell{
+							Ch: 0,
+							Fg: back.Fg,
+							Bg: back.Bg,
+						}
+					}
+				}
+			} else if back.Type == IMAGE {
+				write_item_img(x, y, back.Bytes)
 			}
 			x += w
 		}
@@ -239,7 +261,28 @@ func SetCell(x, y int, ch rune, fg, bg Attribute) {
 		return
 	}
 
-	back_buffer.cells[y*back_buffer.width+x] = Cell{ch, fg, bg}
+	back_buffer.cells[y*back_buffer.width+x] = Cell{ch, fg, bg, NORMAL, nil}
+}
+
+func SetImageCell(x, y int, bytes []byte) {
+	if x < 0 || x >= back_buffer.width {
+		return
+	}
+	if y < 0 || y >= back_buffer.height {
+		return
+	}
+
+	back_buffer.cells[y*back_buffer.width+x] = Cell{Type: IMAGE,
+		Bytes: bytes}
+	//for i := 1; i < IMAGE_WIDTH; i++ {
+	//	back_buffer.cells[y*back_buffer.width+x+i] = Cell{Type: IMAGE_PLACEHOLDER}
+	//}
+	for j := 1; j < IMAGE_HEIGHT; j++ {
+		for i := 0; i < IMAGE_WIDTH; i++ {
+			back_buffer.cells[(y+j)*back_buffer.
+				width+x+i] = Cell{Type: IMAGE_PLACEHOLDER}
+		}
+	}
 }
 
 // Returns a slice into the termbox's back buffer. You can get its dimensions
@@ -312,7 +355,7 @@ func PollRawEvent(data []byte) Event {
 
 // Wait for an event and return it. This is a blocking function call.
 func PollEvent() Event {
-	// Constant governing macOS specific behavior. See https://github.com/nsf/termbox-go/issues/132
+	// Constant governing macOS specific behavior. See https://github.com/hawklithm/termbox-go/issues/132
 	// This is an arbitrary delay which hopefully will be enough time for any lagging
 	// partial escape sequences to come through.
 	const esc_wait_delay = 100 * time.Millisecond

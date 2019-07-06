@@ -1,6 +1,8 @@
 // termbox is a library for creating cross-platform text-based interfaces
 package termbox
 
+import "reflect"
+
 // public API, common OS agnostic part
 
 type (
@@ -10,6 +12,14 @@ type (
 	Modifier   uint8
 	Key        uint16
 	Attribute  uint16
+)
+
+type CellTypeEnum int
+
+const (
+	NORMAL CellTypeEnum = iota
+	IMAGE
+	IMAGE_PLACEHOLDER
 )
 
 // This type represents a termbox event. The 'Mod', 'Key' and 'Ch' fields are
@@ -32,9 +42,15 @@ type Event struct {
 // array of cells. 'Ch' is a unicode character, 'Fg' and 'Bg' are foreground
 // and background attributes respectively.
 type Cell struct {
-	Ch rune
-	Fg Attribute
-	Bg Attribute
+	Ch    rune
+	Fg    Attribute
+	Bg    Attribute
+	Type  CellTypeEnum
+	Bytes []byte
+}
+
+func CellEqual(a, b *Cell) bool {
+	return a.Ch == b.Ch && a.Fg == b.Fg && a.Bg == b.Bg && a.Type == b.Type && reflect.DeepEqual(b.Bytes, a.Bytes)
 }
 
 // To know if termbox has been initialized or not

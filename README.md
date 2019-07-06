@@ -1,5 +1,9 @@
 [![GoDoc](https://godoc.org/github.com/nsf/termbox-go?status.svg)](http://godoc.org/github.com/nsf/termbox-go)
 
+## 新增内容
+1. 在原版基础上扩展了Cell结构，增加基于iTerm2 Protocal 进行的终端图片文件展示
+---------------
+
 ## IMPORTANT
 
 This library is somewhat not maintained anymore. But I'm glad that it did what I wanted the most. It moved people away from "ncurses" mindset and these days we see both re-implementations of termbox API in various languages and even possibly better libs with similar API design. If you're looking for a Go lib that provides terminal-based user interface facilities, I've heard that https://github.com/gdamore/tcell is good (never used it myself). Also for more complicated interfaces and/or computer games I recommend you to consider using HTML-based UI. Having said that, termbox still somewhat works. In fact I'm writing this line of text right now in godit (which is a text editor written using termbox-go). So, be aware. Good luck and have a nice day.
