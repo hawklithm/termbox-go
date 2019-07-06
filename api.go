@@ -182,7 +182,7 @@ func Flush() error {
 					w = 1
 				}
 			} else {
-				w = 4
+				w = 1
 			}
 			if CellEqual(back, front) {
 				x += w
