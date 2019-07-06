@@ -220,9 +220,6 @@ func Flush() error {
 				}
 			} else if back.Type == IMAGE {
 				write_item_img(x, y, back.Bytes)
-			} else if back.Type == IMAGE_PLACEHOLDER {
-				send_attr(back.Fg, back.Bg)
-				send_char(x, y, 'r')
 			}
 			x += w
 		}
