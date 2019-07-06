@@ -35,7 +35,7 @@ func main() {
 	imgBase64Str := getImage("file.jpg")
 
 	termbox.SetImageCell(1, 1, []byte(imgBase64Str))
-	termbox.SetImageCell(16, 4, []byte(imgBase64Str))
+	termbox.SetImageCell(10, 1, []byte(imgBase64Str))
 	termbox.SetImageCell(16, 32, []byte(imgBase64Str))
 	for i := 0; i < 36; i++ {
 		ch := i
@@ -66,7 +66,7 @@ mainloop:
 				break mainloop
 			}
 		}
-		termbox.SetCell(2, 2, 'g', termbox.ColorWhite, termbox.ColorBlack)
-		termbox.SetImageCell(1, 1, []byte(imgBase64Str))
+		termbox.SetCell(0, 6, 'g', termbox.ColorWhite, termbox.ColorBlack)
+		//termbox.SetImageCell(1, 1, []byte(imgBase64Str))
 	}
 }
