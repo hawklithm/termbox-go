@@ -176,17 +176,16 @@ func Flush() error {
 				back.Ch = ' '
 			}
 			var w int
-			if back.Type == NORMAL {
-				w = runewidth.RuneWidth(back.Ch)
-				if w == 0 || w == 2 && runewidth.IsAmbiguousWidth(back.Ch) {
-					w = 1
-				}
-			} else {
+
+			w = runewidth.RuneWidth(back.Ch)
+			if w == 0 || w == 2 && runewidth.IsAmbiguousWidth(back.Ch) {
 				w = 1
 			}
-			if CellEqual(back, front) {
-				x += w
-				continue
+			if front.Type != IMAGE_PLACEHOLDER {
+				if CellEqual(back, front) {
+					x += w
+					continue
+				}
 			}
 			*front = *back
 			if back.Type == NORMAL {
@@ -207,7 +206,7 @@ func Flush() error {
 						}
 					}
 				}
-			} else {
+			} else if back.Type == IMAGE {
 				send_attr(ColorWhite, ColorBlack)
 				write_item_img(x, y, back.Bytes)
 			}
@@ -264,6 +263,15 @@ func SetImageCell(x, y int, bytes []byte) {
 
 	back_buffer.cells[y*back_buffer.width+x] = Cell{Type: IMAGE,
 		Bytes: bytes}
+	for i := 1; i < IMAGE_WIDTH; i++ {
+		back_buffer.cells[y*back_buffer.width+x+i] = Cell{Type: IMAGE_PLACEHOLDER}
+	}
+	for j := 1; j < IMAGE_HEIGHT; j++ {
+		for i := 0; i < IMAGE_WIDTH; i++ {
+			back_buffer.cells[(y+j)*back_buffer.
+				width+x+i] = Cell{Type: IMAGE_PLACEHOLDER}
+		}
+	}
 }
 
 // Returns a slice into the termbox's back buffer. You can get its dimensions

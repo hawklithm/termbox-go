@@ -38,6 +38,11 @@ const (
 	attr_invalid  = Attribute(0xFFFF)
 )
 
+const (
+	IMAGE_HEIGHT = 4
+	IMAGE_WIDTH  = 16
+)
+
 type input_event struct {
 	data []byte
 	err  error
@@ -102,7 +107,9 @@ func write_item_img(x, y int, buffer []byte) {
 	if x-1 != lastx || y != lasty {
 		write_cursor(x, y)
 	}
-	outbuf.WriteString("\033]1337;File=;inline=1;width=16;height=4;preserveAspectRatio=0:")
+	outbuf.WriteString("\033]1337;File=;inline=1;width=" + strconv.Itoa(
+		IMAGE_WIDTH) + ";height=" + strconv.Itoa(IMAGE_HEIGHT) +
+		";preserveAspectRatio=0:")
 	outbuf.Write(buffer)
 	outbuf.WriteString("\a")
 	lastx, lasty = x, y
